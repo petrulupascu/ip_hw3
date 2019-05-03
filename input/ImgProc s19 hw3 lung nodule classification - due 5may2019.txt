@@ -1,0 +1,80 @@
+Image Processing (ImgProc) 
+Course Spring 2019
+Homeworks 3 & 4 "FEATURE COMPUTATION FOR PATTERN RECOGNITION"
+
+
+HANDED OUT: 26-Apr-2019
+DUE DATE / TIME: 5-May-2014, 23:59 h
+
+
+SUBMISSION MODE:
+Send your homework implementation and results, following the submission requirements as explained below, via e-mail (subject: "ImgProc hw3 submission") to: 
+h.hahn@jacobs-university.de (instructor) AND h.altun@jacobs-university.de (TA)
+
+
+IMPORTANT: 
+Read the complete instructions before starting with the homework, and do not start too late! 
+
+
+TASKS (this larger homework is the combination of hw3 and hw4):
+
+(1) IMAGE IMPORT
+* Write a command line program that reads the png mosaic image (you may use a suitable library for data loading and saving) and computes descriptive features for all objects. 
+* The input mosaic image ('LungNoduleSamples-training-20x2.png') has a size of 640x64 pixels and is made up of 40 (two rows per 20) tiles (each 32x32 pixels, 8 bit). Each tile contains one object.
+* The image and tile sizes can be hard coded in your program.
+
+(2) SEGMENTATION
+* Proceed with processing each of the tiles (32x32 pixels) separately (loop over all tiles).
+* Try to segment the central 'blob' from each tile, e.g. with some fixed or adaptive threshold and by finding the connected component above the threshold that contains the center pixel (pixel coordinate (16,16), i.e. pixel just neighboring the tile center towards the bottom right direction). This will work for most of the tiles. Also, your hw1+hw2 modules might be useful for the segmentation task. 
+* Export the blob segmentations as a binary mask to a file (png or csv).
+
+(3) FEATURE COMPUTATION
+* Think about two features that could be combined to discriminate the above row (benign lung nodules) from the bottom row (malignant lung nodules) and that can be computed from the pixel values within the segmented blob area. Write your feature definition (formula) and motivation in the report txt file.
+* Implement the computation of the chosen features into your code.
+* Ideally, the classes would be completely separated by a linear classifier on a combination of the two features (e.g. line defined by slope and intercept within 2D feature subspace). 
+
+(4) GENERATE OUTPUT
+* Implement your feature computation such that it works automatically for all tiles and add an output function that writes the computed features for all objects plus the respective class labels (1 for top and 2 for bottom row, respectively) into a text file.
+* FILE FORMAT:  Comma separated values with three columns, one line per object (total 20 lines), values of your features in first and second columns, and class label in third column, for example one line could look like this:
+0.082, 0.324, 1
+* Output file name: 'features.txt' (containing 20 lines similar to above)
+
+(5) PLOT 2D FEATURE SUBSPACES
+* plot the labeled 2D feature subspace (using any suitable program, such as matlab or gnuplot) from the feature output file generated above.
+* QUESTION: what is the maximum training accuracy of a linear classifier in your feature space (how many false classifications)? Explain the outliers you see by looking at the wrongly classified tiles and finding reasons for the false classification. Write your answers into the report txt file. 
+
+(6) SECOND DATASET OF YOUR CHOICE
+* compile a mosaic similar to the one provided from images you find in the internet. At least two classes, at least 10 objects per class, at least 32x32 tile size shall be chosen. For example, search the internet for "hand written digits".
+* Perform all of the tasks (2)-(5) for this new dataset. Segmentation might be skipped in case that the tiles solely contain the objects of interest.
+
+
+SUBMISSION REQUIREMENTS, COMMENTS & BONUS OPTION:
+
+* Name your archive file as follows: "<Surnames>_IP_hw3.zip" which should have the following folder hierarchy:
+   1. "src"  - folder with your source code and Makefile etc.
+   2. "output" - folder with results
+   3. "report" - add one file "<Surnames>_IP_hw3_report.txt" comprising a statement of contribution (which parts were done by which teammate?), descriptions and references/source URLs of the chosen experiments/problems from the internet, and, if applicable, references to used material or help on the non-algorithmic parts.
+   4. "input" - folder with initial input images and the additional input files from the second experiments (cf. above)
+
+* Strictly adhere to the specified format for output files, in order to facilitate automated result comparison.
+	
+* Regarding the coding style, commented code with a clear structure and without unnecessary code doubling is preferred.
+
+* Please include a simple Makefile that will be capable to recompile your code, regenerate your results and place them in the output folder, by just typing make.
+
+* You are required to implement the full core part of the homework (algorithm, data structures) yourself without help from other people, without copying code from somewhere else, and without calling ready-made library functions that already do parts of the core task. Loading and saving of data is not considered as core tasks.
+
+* There will be no extension of the deadline. Late submissions will receive zero score. The same applies for any kind of cheating (plus possibly other measures).
+
+* Even though the homework is meant to be done by a team of two, students can work on it alone ('solo submission'), and mention this in the report file. 
+
+* For teams of two, both team members will receive the same grade (except one team member did not contribute, then that score will be zero)
+
+* For solo submission, we will be somewhat more tolerant in our grading regarding missing items, such that a 100% score can already be reached with an incomplete submission.
+
+* BONUS: We will give a bonus of up 50%-10% of a full homework grade (i.e. 4,5%-0,9% of the total course grade) for the five best performing submissions, where performance is measured in the number of false classifications on the provided dataset.
+
+
+Please feel free to ask any questions.
+Good luck!
+------------------------------------------------------------------------------
