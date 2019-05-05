@@ -1,0 +1,24 @@
+The piplene for this homework is quite simple
+
+  input->preprocessing->feature_extraction->training->classification
+
+    input: the mosaic image was imported by using the suitable opencv libraries and cropped , extracting each smaller tile
+    preprocessing: 
+      bluring->tresholding->opening
+        the preprocessing part mainly consisted of segmenting the main blob from the input, I have realized this by using binary tresholding with otsus method,
+        again using the apropriate opencv libraries.
+        in order to further enchance the segmentation the image was blurred as well as morphologically opened(2,2 kernel) in order to remove noise before and after tresholding
+    the 2 features wich I found to be most suitable for the task are:
+      1) blob area: malignant nodules  seemed larger overall compared to benign ones
+      2) blob circularity: as well the bengn nodules seemed more circular in shape compared to malignant ones(the circularity can be measure by (4*pi*area)/(perimeter)^2)
+        while malignant nodules seemed to have more of a non convex shape with "tentacles"
+    the model was trained by using a supprt vector machine with a linear kernel, achieving an accuracy of 0.8
+
+
+for this homework mainly used openCV libraries for the image preprocessing https://opencv.org/
+as well as the sklearn : https://scikit-learn.org/ for the classification 
+
+regarding the plot and my own dataset and the plots due to time constraints I wont do it but:
+  the classifier should be able to predict with a decent accuracy if the image contains an apple or and octopus due to the  designed features(I know its not hard to to this, I am just out of time)
+
+in order to run the program run windows powershell(or bash on linux) in folder  and type ".\run.sh"
