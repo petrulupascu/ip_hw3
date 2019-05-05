@@ -1,7 +1,9 @@
-import cv2
-import numpy as np
-import imutils
 import math
+import cv2
+import imutils
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import svm
 
 def import_mozaic(path):
   image_list = []
@@ -57,22 +59,37 @@ def get_cedges(images):
 
 
 ###features 
-def measure_blob_circularity(image):
-  cnts = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-  cnts = imutils.grab_contours(cnts)
-  cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:10]
-  ko = 0
-  for cnt in cnts:
-    leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
-    rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
-    topmost = tuple(cnt[cnt[:,:,1].argmin()][0])
-    bottommost = tuple(cnt[cnt[:,:,1].argmax()][0])
-    if(leftmost[0] < 16 and rightmost[0] > 16 and topmost[1] < 16 and bottommost[1] > 16 ):
-      peri = cv2.arcLength(cnt, True)
-      area = cv2.contourArea(cnt)
-      circularity = (4.0*math.pi*area)/(peri**2)
-  #cv2.waitKey(0)
-  return (circularity, area)
+def get_features(images):
+  features = []
+  for image in images:
+    cnts = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:10]
+    ko = 0
+    for cnt in cnts:
+      leftmost = tuple(cnt[cnt[:,:,0].argmin()][0])
+      rightmost = tuple(cnt[cnt[:,:,0].argmax()][0])
+      topmost = tuple(cnt[cnt[:,:,1].argmin()][0])
+      bottommost = tuple(cnt[cnt[:,:,1].argmax()][0])
+      if(leftmost[0] < 16 and rightmost[0] > 16 and topmost[1] < 16 and bottommost[1] > 16 ):
+        peri = cv2.arcLength(cnt, True)
+        area = cv2.contourArea(cnt)
+        circularity = (4.0*math.pi*area)/(peri**2)
+    features.append((circularity, area))
+  return (features)
+
+def build_dataset(FeatureList):
+  dataset = np.zeros((40, 3))
+  for i in range(40):
+    if i < 20:
+      dataset[i][0] = 0
+      dataset[i][1] = FeatureList[i][0]
+      dataset[i][2] = FeatureList[i][1]
+    else:
+      dataset[i][0] = 1
+      dataset[i][1] = FeatureList[i][0]
+      dataset[i][2] = FeatureList[i][1]
+  return dataset
 
 
 input_path = "./../input/LungNoduleSamples-20x2.png"
@@ -84,12 +101,19 @@ save_image_list_as_mozaic(SegementedImageList, output_path_mozaic)
 
 CannyEdgesImageList = get_cedges(SegementedImageList)
 save_image_list_as_mozaic(CannyEdgesImageList, edges_path_mozaic)
+FeatureList = get_features(SegementedImageList)
 
-for eci in SegementedImageList:
-  cv2.imshow('imafe', eci)
-  #cv2.waitKey(0)
-  print(measure_blob_circularity(eci))
+DataSet = build_dataset(FeatureList)
 
+DataSetShuf = DataSet
+np.random.shuffle(DataSetShuf)
+
+
+X = DataSet[:, 1:3]
+Y = DataSet[:, 0]
+
+classifier = svm.SVC(gamma='auto')
+classifier.fit(X, Y)
 
 
 
