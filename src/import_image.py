@@ -20,8 +20,9 @@ for im in image_list:
   cv.waitKey(0)
   ret, th3 = cv.threshold(im,0,255,cv.THRESH_BINARY_INV+cv.THRESH_OTSU)
   #th3 = cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY,31,2)
-  #cv.imshow('image', th3)
-  #cv.waitKey(0)
+  th3 = 
+  cv.imshow('image', th3)
+  cv.waitKey(0)
   tresholded_images.append(th3)
 
 """
